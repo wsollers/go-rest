@@ -13,6 +13,9 @@ on:
   schedule:
     - cron: '38 20 * * 6'
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: DevSkim
@@ -22,13 +25,18 @@ jobs:
       contents: read
       security-events: write
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@a4aa98b93cab29d9b1101a6143fb8bce00e2eac4 # v2.7.1
+        with:
+          egress-policy: audit
+
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
 
       - name: Run DevSkim scanner
-        uses: microsoft/DevSkim-Action@v1
+        uses: microsoft/DevSkim-Action@914fa647b406c387000300b2f09bb28691be2b6d # v1.0.14
 
       - name: Upload DevSkim scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@4f0ceda83afa9bc55df7b6c611b81435fa53d987 # v2.25.4
         with:
           sarif_file: devskim-results.sarif

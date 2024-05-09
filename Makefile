@@ -3,7 +3,7 @@
 # Build the application
 all: build
 
-build:
+build: install-templ
 	@echo "Building..."
 	@templ generate
 	@go build -o main cmd/api/main.go
@@ -58,3 +58,7 @@ watch:
 	fi
 
 .PHONY: all build run test clean
+
+install-templ:
+	# To install templ, run the following command:
+	go install github.com/a-h/templ/cmd/templ@latest
